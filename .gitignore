@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.pyc
+.git/   
+best_ckpt.pt
+*.tif
+*.tiff
+out/
+scripts/ChangeFormer/vis/
+ChangeFormer/checkpoints/
+ChangeFormer/samples/

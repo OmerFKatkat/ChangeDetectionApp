@@ -1,0 +1,155 @@
+{
+  "defne": {
+    "name": "Defne",
+    "il": "Hatay",
+    "ilce": "Defne",
+    "mahalle": "Çekmece",
+    "lat": 36.198083,
+    "lon": 36.143167,
+    "aoi_m": 400,
+    "pre_date": "2021-06-15",
+    "post_date": "2024-06-15",
+    "before_image": "custom_images/defne_after_2024_crop_square.png",
+    "after_image": "custom_images/defne_before_2021_crop_square.png"
+  },
+
+  "antakya": {
+    "name": "Antakya",
+    "il": "Hatay",
+    "ilce": "Antakya",
+    "mahalle": "Cumhuriyet",
+    "lat": 36.20631,
+    "lon": 36.15590,
+    "aoi_m": 400,
+    "pre_date": "2022-06-15",
+    "post_date": "2023-06-15",
+    "before_image": "custom_images/antakya_after_2023_crop_square.png",
+    "after_image": "custom_images/antakya_before_2022_crop_square.png"
+  },
+
+  "antakya-akevler": {
+    "name": "Antakya Akevler",
+    "il": "Hatay",
+    "ilce": "Antakya",
+    "mahalle": "Akevler",
+    "lat": 36.215,
+    "lon": 36.157,
+    "aoi_m": 400,
+    "pre_date": "2021-09-27",
+    "post_date": "2023-02-15",
+    "before_image": "custom_images/antakya_36p2150_36p1570_after_2023-02-15_crop_square.png",
+    "after_image": "custom_images/antakya_36p2150_36p1570_before_2021-09-27_crop_square.png"
+  },
+
+  "antakya-akevler-2": {
+    "name": "Antakya Akevler",
+    "il": "Hatay",
+    "ilce": "Antakya",
+    "mahalle": "Akevler",
+    "lat": 36.21771667,
+    "lon": 36.156025,
+    "aoi_m": 400,
+    "pre_date": "2021-09-27",
+    "post_date": "2023-02-15",
+    "before_image": "custom_images/after_2023-01-14_crop_1024.png",
+    "after_image": "custom_images/before_2021-09-27_crop_1024.png"
+  },
+
+  "antakya-Akevler-3": {
+    "name": "Antakya Akevler",
+    "il": "Hatay",
+    "ilce": "Antakya",
+    "mahalle": "Akevler",
+    "lat": 36.204475,
+    "lon": 36.15371389,
+    "aoi_m": 400,
+    "pre_date": "2022-12-22",
+    "post_date": "2023-02-15",
+    "before_image": "custom_images/antakya_36p20447500_36p15371389_after_2023-02-15_crop_1024.png",
+    "after_image": "custom_images/antakya_36p20447500_36p15371389_before_2022-12-22_crop_1024.png"
+  },
+
+  "antakya-Akevler-4": {
+    "name": "Antakya Akevler",
+    "il": "Hatay",
+    "ilce": "Antakya",
+    "mahalle": "Akevler",
+    "lat": 36.21250556,
+    "lon": 36.161,
+    "aoi_m": 400,
+    "pre_date": "2022-12-22",
+    "post_date": "2023-02-15",
+    "before_image": "custom_images/antakya_36p21250556_36p16100000_after_2023-02-15_crop_1024.png",
+    "after_image": "custom_images/antakya_36p21250556_36p16100000_before_2022-12-22_crop_1024.png"
+  },
+
+  "antakya-Gazi": {
+    "name": "Antakya Gazi",
+    "il": "Hatay",
+    "ilce": "Antakya",
+    "mahalle": "Gazi",
+    "lat": 36.19791111,
+    "lon": 36.15033333,
+    "aoi_m": 400,
+    "pre_date": "2021-01-10",
+    "post_date": "2023-04-26",
+    "before_image": "custom_images/antakya_36p19791111_36p15033333_after_2023-04-26_crop_1024.png",
+    "after_image": "custom_images/antakya_36p19791111_36p15033333_before_2021-01-10_crop_1024.png"
+  },
+
+  "antakya-Gazi-2": {
+    "name": "Antakya Gazi",
+    "il": "Hatay",
+    "ilce": "Antakya",
+    "mahalle": "Gazi",
+    "lat": 36.204475,
+    "lon": 36.15371389,
+    "aoi_m": 400,
+    "pre_date": "2022-12-22",
+    "post_date": "2023-02-15",
+    "before_image": "custom_images/antakya_36p20447500_36p15371389_after_2023-02-15_crop_1024.png",
+    "after_image": "custom_images/antakya_36p20447500_36p15371389_before_2022-12-22_crop_1024.png"
+  },
+
+  "antakya-Urgenpasa": {
+    "name": "Antakya Ürgen Paşa",
+    "il": "Hatay",
+    "ilce": "Antakya",
+    "mahalle": "UrgenPasa",
+    "lat": 36.21849722,
+    "lon": 36.160425,
+    "aoi_m": 400,
+    "pre_date": "2022-12-22",
+    "post_date": "2023-02-15",
+    "before_image": "custom_images/antakya_36p21849722_36p16042500_after_2023-02-15_crop_1024.png",
+    "after_image": "custom_images/antakya_36p21849722_36p16042500_before_2022-12-22_crop_1024.png"
+  },
+
+  "kahramanmaras-onikisubat": {
+    "name": "Kahramanmaraş Onikişubat",
+    "il": "Kahramanmaraş",
+    "ilce": "Onikişubat",
+    "mahalle": "Şazi Bey",
+    "lat": 37.57120556,
+    "lon": 36.92,
+    "aoi_m": 400,
+    "pre_date": "2022-12-22",
+    "post_date": "2023-02-08",
+    "before_image": "custom_images/kahramanmaras_after_2023_crop_square.png",
+    "after_image": "custom_images/kahramanmaras_before_2022_crop_square.png"
+  },
+
+  "kahramanmaras-onikisubat-2": {
+    "name": "Kahramanmaraş Şazi Bey",
+    "il": "Kahramanmaraş",
+    "ilce": "Onikişubat",
+    "mahalle": "Şazi Bey",
+    "lat": 37.57671101,
+    "lon": 36.92235942,
+    "aoi_m": 400,
+    "pre_date": "2021-04-10",
+    "post_date": "2023-02-16",
+    "before_image": "custom_images/kahramanmaras_37p57671101_36p92235942_after_2023-02-16_crop_square.png",
+    "after_image": "custom_images/kahramanmaras_37p57671101_36p92235942_before_2021-04-10_crop_square.png"
+  }
+}

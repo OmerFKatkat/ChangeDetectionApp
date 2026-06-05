@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Satellite Change Detection — ChangeFormer</title>
+    <meta name="description" content="Detect building changes between satellite images using the ChangeFormer deep learning model.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-grid"></div>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+
+    <!-- Header -->
+    <header id="app-header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M2 12h20"/>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1>ChangeFormer</h1>
+                    <span class="subtitle">Disaster Damage Assessment</span>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button type="button" class="icon-btn" id="btn-open-upload" aria-label="Add new area to dataset" title="Add area">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="17 8 12 3 7 8"/>
+                        <line x1="12" y1="3" x2="12" y2="15"/>
+                    </svg>
+                </button>
+                <div class="badge" id="status-badge">
+                    <span class="badge-dot"></span>
+                    Model Ready
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- ─── Pick Location Section ─── -->
+        <section class="upload-section" id="upload-section">
+            <div class="section-header">
+                <span class="section-number">01</span>
+                <h2>Pick an Area</h2>
+            </div>
+
+            <div class="pick-grid">
+                <!-- Map -->
+                <div class="pick-map-card">
+                    <div id="pick-map"></div>
+                </div>
+
+                <!-- Right column: tabs, picker, advanced, button -->
+                <div class="pick-controls">
+
+                    <!-- Tab switcher (same toggle-btn pattern as the comparison view-toggle) -->
+                    <div class="pick-tabs" id="pick-tabs" role="tablist" aria-label="Choose how to pick an AOI">
+                        <button type="button"
+                                class="toggle-btn pick-tab active"
+                                id="tab-browse"
+                                data-tab="browse"
+                                role="tab"
+                                aria-selected="true"
+                                aria-controls="panel-browse">
+                            Browse by Location
+                        </button>
+                        <button type="button"
+                                class="toggle-btn pick-tab"
+                                id="tab-coords"
+                                data-tab="coords"
+                                role="tab"
+                                aria-selected="false"
+                                aria-controls="panel-coords">
+                            By Coordinates
+                        </button>
+                    </div>
+
+                    <!-- Tab panel: Browse by Location -->
+                    <div class="pick-tab-panel"
+                         id="panel-browse"
+                         role="tabpanel"
+                         aria-labelledby="tab-browse">
+
+                        <div class="cascade-row">
+                            <label class="cascade-field">
+                                <span class="cascade-label">İl</span>
+                                <select id="select-il" class="cascade-select">
+                                    <option value="">—</option>
+                                </select>
+                            </label>
+
+                            <label class="cascade-field">
+                                <span class="cascade-label">İlçe</span>
+                                <select id="select-ilce" class="cascade-select" disabled>
+                                    <option value="">—</option>
+                                </select>
+                            </label>
+
+                            <label class="cascade-field" id="field-mahalle">
+                                <span class="cascade-label">Mahalle</span>
+                                <select id="select-mahalle" class="cascade-select" disabled>
+                                    <option value="">—</option>
+                                </select>
+                            </label>
+                        </div>
+
+                        <div class="aoi-list-meta">
+                            <span id="aoi-count">—</span>
+                            <span class="aoi-list-hint">Click a card or marker to select</span>
+                        </div>
+
+                        <div class="aoi-list" id="aoi-list" role="listbox" aria-label="Available areas of interest">
+                            <!-- AOI cards rendered by app.js -->
+                            <div class="aoi-list-empty" id="aoi-list-empty">
+                                Pick an il / ilçe to see areas.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab panel: By Coordinates -->
+                    <div class="pick-tab-panel"
+                         id="panel-coords"
+                         role="tabpanel"
+                         aria-labelledby="tab-coords"
+                         hidden>
+
+                        <div class="coord-form">
+                            <label class="cascade-field">
+                                <span class="cascade-label">Latitude</span>
+                                <input type="number"
+                                       id="input-lat"
+                                       class="cascade-select coord-input"
+                                       step="0.000001"
+                                       placeholder="36.2150"
+                                       inputmode="decimal">
+                            </label>
+                            <label class="cascade-field">
+                                <span class="cascade-label">Longitude</span>
+                                <input type="number"
+                                       id="input-lon"
+                                       class="cascade-select coord-input"
+                                       step="0.000001"
+                                       placeholder="36.1570"
+                                       inputmode="decimal">
+                            </label>
+                            <button type="button" class="btn-find" id="btn-find">
+                                Find AOI
+                            </button>
+                        </div>
+
+                        <div class="coord-info" id="coord-info" hidden></div>
+                        <div class="aoi-list" id="coord-aoi-list" role="listbox" aria-label="Matched area">
+                            <!-- Matched card rendered by app.js -->
+                        </div>
+                    </div>
+
+                    <button class="btn-detect" id="btn-detect" disabled>
+                        <span class="btn-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </span>
+                        <span class="btn-text">Detect Changes</span>
+                        <span class="btn-loader" id="btn-loader" style="display:none">
+                            <span class="spinner"></span>
+                            Running model…
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ─── Results Section ─── -->
+        <section class="results-section" id="results-section" style="display:none">
+            <div class="section-header">
+                <span class="section-number">02</span>
+                <h2>Detection Results</h2>
+                <p id="results-subtitle">Pre/post satellite tiles with ChangeFormer-predicted change mask and overlay.</p>
+            </div>
+
+            <!-- Stats Bar — Change Percentage is the headline stat -->
+            <div class="stats-bar" id="stats-bar">
+                <div class="stat-card stat-card-hero">
+                    <span class="stat-label">Changed Area</span>
+                    <span class="stat-value stat-value-hero" id="stat-pct">—</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Avg Confidence</span>
+                    <span class="stat-value" id="stat-confidence">—</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-label">Resolution</span>
+                    <span class="stat-value" id="stat-size">—</span>
+                </div>
+            </div>
+
+            <div class="info-row">
+                <span><strong>Area:</strong> <span id="info-area">—</span></span>
+                <span><strong>Location:</strong> <span id="info-location">—</span></span>
+                <span><strong>Pre:</strong> <span id="info-pre-date">—</span></span>
+                <span><strong>Post:</strong> <span id="info-post-date">—</span></span>
+            </div>
+
+            <!-- Result Panels -->
+            <div class="results-grid">
+                <!-- Before / After comparison -->
+                <div class="result-panel result-panel-wide">
+                    <div class="panel-header">
+                        <h3>Before &amp; After Comparison</h3>
+                        <div class="view-toggle" id="view-toggle">
+                            <button class="toggle-btn active" data-view="side" id="toggle-side">Side by Side</button>
+                            <button class="toggle-btn" data-view="slider" id="toggle-slider">Slider</button>
+                        </div>
+                    </div>
+                    <div class="comparison-container" id="comparison-container">
+                        <div class="side-view" id="side-view">
+                            <div class="side-img-wrap">
+                                <img id="result-before" alt="Before">
+                                <span class="img-label">Before</span>
+                            </div>
+                            <div class="side-img-wrap">
+                                <img id="result-after" alt="After">
+                                <span class="img-label">After</span>
+                            </div>
+                        </div>
+                        <div class="slider-view" id="slider-view" style="display:none">
+                            <div class="slider-container" id="slider-container">
+                                <img id="slider-after" class="slider-img" alt="After">
+                                <div class="slider-overlay" id="slider-overlay">
+                                    <img id="slider-before" class="slider-img" alt="Before">
+                                </div>
+                                <div class="slider-handle" id="slider-handle">
+                                    <div class="slider-line"></div>
+                                    <div class="slider-grip">
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="9 18 15 12 9 6"/></svg>
+                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="15 18 9 12 15 6"/></svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Change Mask -->
+                <div class="result-panel">
+                    <div class="panel-header"><h3>Change Mask</h3></div>
+                    <div class="panel-img-wrap"><img id="result-mask" alt="Binary change mask"></div>
+                </div>
+
+                <!-- Overlay -->
+                <div class="result-panel">
+                    <div class="panel-header"><h3>Change Overlay</h3></div>
+                    <div class="panel-img-wrap">
+                        <img id="result-overlay" alt="Change overlay on after image">
+                        <div class="overlay-legend"><span class="legend-dot"></span> Detected change</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="action-bar">
+                <button class="btn-secondary" id="btn-new">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                    New Detection
+                </button>
+                <button class="btn-secondary" id="btn-download">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    Download Composite
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Error Toast (used only for unexpected/real errors; no-coverage shows inline) -->
+    <div class="toast" id="error-toast" style="display:none">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+        <span id="error-msg"></span>
+    </div>
+
+    <!-- ─── Upload AOI Modal ─────────────────────────────────────────────── -->
+    <div class="modal-backdrop" id="upload-modal" hidden role="dialog" aria-modal="true" aria-labelledby="upload-modal-title">
+        <div class="modal-panel">
+            <div class="modal-header">
+                <div>
+                    <h2 id="upload-modal-title">Add Area to Dataset</h2>
+                    <p class="modal-sub">Upload a pre/post image pair with location metadata. Both images should ideally be 1024×1024 RGB.</p>
+                </div>
+                <button type="button" class="icon-btn modal-close" id="btn-close-upload" aria-label="Close">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                </button>
+            </div>
+
+            <form class="modal-body" id="upload-form">
+                <div class="form-grid">
+                    <label class="cascade-field form-col-2">
+                        <span class="cascade-label">Area name</span>
+                        <input type="text" name="name" class="cascade-select coord-input" required maxlength="120">
+                    </label>
+
+                    <label class="cascade-field">
+                        <span class="cascade-label">İl</span>
+                        <input type="text" name="il" class="cascade-select coord-input" placeholder="Hatay" required maxlength="80">
+                    </label>
+                    <label class="cascade-field">
+                        <span class="cascade-label">İlçe</span>
+                        <input type="text" name="ilce" class="cascade-select coord-input" placeholder="Antakya" required maxlength="80">
+                    </label>
+                    <label class="cascade-field form-col-2">
+                        <span class="cascade-label">Mahalle <span class="optional-hint">(optional)</span></span>
+                        <input type="text" name="mahalle" class="cascade-select coord-input" placeholder="Akevler" maxlength="80">
+                    </label>
+
+                    <label class="cascade-field">
+                        <span class="cascade-label">Latitude</span>
+                        <input type="number" name="lat" class="cascade-select coord-input" step="0.000001" min="-90" max="90" placeholder="36.215" required>
+                    </label>
+                    <label class="cascade-field">
+                        <span class="cascade-label">Longitude</span>
+                        <input type="number" name="lon" class="cascade-select coord-input" step="0.000001" min="-180" max="180" placeholder="36.157" required>
+                    </label>
+
+                    <label class="cascade-field">
+                        <span class="cascade-label">AOI size (m)</span>
+                        <input type="number" name="aoi_m" class="cascade-select coord-input" step="1" min="50" max="5000" value="400" required>
+                    </label>
+                    <label class="cascade-field">
+                        <span class="cascade-label">Pre date</span>
+                        <input type="date" name="pre_date" class="cascade-select coord-input" required>
+                    </label>
+                    <label class="cascade-field form-col-2">
+                        <span class="cascade-label">Post date</span>
+                        <input type="date" name="post_date" class="cascade-select coord-input" required>
+                    </label>
+
+                    <label class="cascade-field file-field">
+                        <span class="cascade-label">Pre image (older)</span>
+                        <input type="file" name="pre_image" accept="image/png,image/jpeg,image/webp" required>
+                    </label>
+                    <label class="cascade-field file-field">
+                        <span class="cascade-label">Post image (newer)</span>
+                        <input type="file" name="post_image" accept="image/png,image/jpeg,image/webp" required>
+                    </label>
+                </div>
+
+                <div class="modal-error" id="upload-error" hidden></div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" id="btn-cancel-upload">Cancel</button>
+                    <button type="submit" class="btn-detect btn-detect-sm" id="btn-submit-upload">
+                        <span class="btn-text">Add to Dataset</span>
+                        <span class="btn-loader" id="upload-loader" style="display:none">
+                            <span class="spinner"></span>
+                            Uploading…
+                        </span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="app.js"></script>
+</body>
+</html>
