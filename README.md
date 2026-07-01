@@ -12,7 +12,7 @@ pinned: false
 
 Web app for **building change detection** on satellite imagery, built around a fine-tuned **ChangeFormerV6** model. Curated pre/post pairs cover earthquake-damage sites in Hatay and Kahramanmaraş (Feb 2023).
 
-🌐 [Live demo](https://huggingface.co/spaces/omerfkk/ChangeDetectionApp) · 🧠 [Model weights](https://huggingface.co/omerfkk/changeformer-xbd)
+🌐 [Live demo](https://huggingface.co/spaces/omerfkk/change-detection) · 🧠 [Model weights](https://huggingface.co/omerfkk/changeformer-xbd)
 
 ## Stack
 
